@@ -5,12 +5,14 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes';
 import activityRoutes from './routes/activityRoutes';
 import teamRoutes from './routes/teamRoutes';
+import leaderboardRoutes from './routes/leaderboardRoutes';
+import workoutRoutes from './routes/workoutRoutes';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit-tracker';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
 
 // Middleware
 app.use(cors());
@@ -26,6 +28,8 @@ mongoose.connect(MONGODB_URI)
 app.use('/api/users', userRoutes);
 app.use('/api/activities', activityRoutes);
 app.use('/api/teams', teamRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/workouts', workoutRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
