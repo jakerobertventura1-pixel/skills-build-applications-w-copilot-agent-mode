@@ -5,8 +5,8 @@
  * and workouts for OctoFit Tracker.
  */
 
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { connectDatabase, disconnectDatabase } from '../database';
 import { User } from '../models/User';
 import { Team } from '../models/Team';
 import { Activity } from '../models/Activity';
@@ -14,8 +14,6 @@ import { Leaderboard } from '../models/Leaderboard';
 import { Workout } from '../models/Workout';
 
 dotenv.config();
-
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
 
 const sampleUsers = [
   {
@@ -118,8 +116,7 @@ const sampleWorkouts = [
 async function seed() {
   console.log('Seed the octofit_db database with test data');
 
-  await mongoose.connect(MONGODB_URI);
-  console.log(`Connected to MongoDB: ${MONGODB_URI}`);
+  await connectDatabase();
 
   await Promise.all([
     User.deleteMany({}),
@@ -192,8 +189,7 @@ async function seed() {
   console.log(`- Workouts: ${workouts.length}`);
   console.log(`- Leaderboard entries: ${leaderboardEntries.length}`);
 
-  await mongoose.disconnect();
-  console.log('Disconnected from MongoDB');
+  await disconnectDatabase();
 }
 
 seed().catch((error) => {

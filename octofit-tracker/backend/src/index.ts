@@ -1,18 +1,17 @@
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes';
 import activityRoutes from './routes/activityRoutes';
 import teamRoutes from './routes/teamRoutes';
 import leaderboardRoutes from './routes/leaderboardRoutes';
 import workoutRoutes from './routes/workoutRoutes';
+import { connectDatabase, getMongoUri } from './database';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
 
 // Middleware
 app.use(cors());
@@ -20,8 +19,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB Connection
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('✓ MongoDB connected'))
+connectDatabase()
+  .then(() => console.log('MongoDB connection established'))
   .catch((err) => console.error('✗ MongoDB connection error:', err));
 
 // API Routes
@@ -57,7 +56,7 @@ app.listen(PORT, () => {
     ╔═══════════════════════════════════════╗
     ║   OctoFit Tracker API Server Running   ║
     ║   Port: ${PORT}                           ║
-    ║   Database: ${MONGODB_URI}     ║
+    ║   Database: ${getMongoUri()}     ║
     ║   Frontend: http://localhost:5173      ║
     ╚═══════════════════════════════════════╝
   `);
